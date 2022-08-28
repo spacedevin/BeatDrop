@@ -27,8 +27,8 @@
 #define DLL_EXPORT __declspec(dllexport)
 //#define COMPILE_AS_DLL
 #define SAMPLE_SIZE 576
-#define DEFAULT_WIDTH 1280;
-#define DEFAULT_HEIGHT 720;
+#define DEFAULT_WIDTH 500;
+#define DEFAULT_HEIGHT 500;
 
 CPlugin g_plugin;
 HINSTANCE api_orig_hinstance = nullptr;
@@ -272,7 +272,7 @@ unsigned __stdcall CreateWindowAndRun(void* data) {
     // Create the render window
     HWND hwnd = CreateWindowW(
         L"Direct3DWindowClass",
-        L"BeatDrop Music Visualizer",
+        L"BeatDrop2077",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
