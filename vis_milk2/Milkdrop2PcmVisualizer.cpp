@@ -272,7 +272,7 @@ unsigned __stdcall CreateWindowAndRun(void* data) {
     // Create the render window
     HWND hwnd = CreateWindowW(
         L"Direct3DWindowClass",
-        L"BeatDrop2077",
+        L"BeatDrop2077 - Press Alt+Enter for fullscreen mode",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
