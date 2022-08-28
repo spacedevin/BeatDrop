@@ -38,6 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "state.h"
 #include <vector>
 #include "../ns-eel2/ns-eel.h"
+#include <string>
 
 //#include <core/sdk/IPlaybackService.h>
 
@@ -428,7 +429,7 @@ public:
 
         // PRESET HISTORY
         #define PRESET_HIST_LEN (64+2)     // make this 2 more than the # you REALLY want to be able to go back.
-        std::wstring     m_presetHistory[PRESET_HIST_LEN];   //circular
+        std::string     m_presetHistory[PRESET_HIST_LEN];   //circular
         int         m_presetHistoryPos;
         int         m_presetHistoryBackFence;
         int         m_presetHistoryFwdFence;
