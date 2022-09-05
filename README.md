@@ -1,7 +1,12 @@
-This is a version of BeatDrop Music Visualizer that **compile without fatal error on Visual Studio 2019**.<br />
-You'll need to install too the DirectX SDK (DXSDK_Jun10.exe) from here: https://www.microsoft.com/en-ca/download/details.aspx?id=6812<br /> 
+This is a slightly improved version of BeatDrop Music Visualizer that **compile without fatal error on Visual Studio 2019**.<br />
+More informations : http://forums.winamp.com/showthread.php?t=458864<br /><br />
+You'll need to install too the DirectX SDK (DXSDK_Jun10.exe)<br />
+from here: https://www.microsoft.com/en-ca/download/details.aspx?id=6812<br /> 
 (Windows Update needs to be enabled for installing the DirectX SDK)<br />
+Tick the box when installing visual studio 2019: "C++ MFC for v142 build tools (x86 & x64)"<br />
 <br />
+Menu fonts have now a bigger size (from SIZE 12 to SIZE 24)<br />
+You can see more lines in the menu (PRESETS_PER_PAGE 32 to PRESETS_PER_PAGE 128)<br /><br />
 **Tweaks for better quality:**<br />
 m_max_fps_fs = 0; (0 for 'unlimited')<br />
 m_max_fps_w = 0; (0 for 'unlimited')<br />
@@ -13,7 +18,7 @@ m_nGridX = 64; (nMeshSize)<br />
 m_nMaxImages = 64;<br />
 m_nMaxBytes = 2000000000;<br />
 <br />
----------------------------------------------------------------------------------------------------------------------------------------------<br />
+--------------------------------------------------------------------------------------------------------------------------------<br />
 # BeatDrop Music Visualizer
 
 BeatDrop is a stand-alone implementation of the amazing Milkdrop2 Winamp plug-in.
