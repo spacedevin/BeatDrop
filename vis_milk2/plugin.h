@@ -429,7 +429,7 @@ public:
 
         // PRESET HISTORY
         #define PRESET_HIST_LEN (64+2)     // make this 2 more than the # you REALLY want to be able to go back.
-        std::string     m_presetHistory[PRESET_HIST_LEN];   //circular
+        std::wstring     m_presetHistory[PRESET_HIST_LEN];   //circular
         int         m_presetHistoryPos;
         int         m_presetHistoryBackFence;
         int         m_presetHistoryFwdFence;
