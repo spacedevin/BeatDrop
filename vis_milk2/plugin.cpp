@@ -1062,7 +1062,7 @@ void CPlugin::MyPreInitialize()
 	memset(&mysound, 0, sizeof(mysound));
 
     for (int i=0; i<PRESET_HIST_LEN; i++)
-    //    m_presetHistory[i] = L""; Removed to compile with VS2019 
+    m_presetHistory[i] = L"";
     m_presetHistoryPos = 0;
     m_presetHistoryBackFence = 0;
     m_presetHistoryFwdFence = 0;
@@ -5387,14 +5387,10 @@ LRESULT CPlugin::MyWindowProc(HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lP
 
 		switch(wParam)
 		{
-		case VK_F9:
-            m_bShowSongTitle = !m_bShowSongTitle; // we processed (or absorbed) the key
-			m_bShowSongTime = !m_bShowSongTime;
-			m_bShowSongLen  = !m_bShowSongLen;
-		    m_bShowPresetInfo = !m_bShowPresetInfo;
-            return 0; // we processed (or absorbed) the key
-		//case VK_F4:		m_bShowFPS = !m_bShowFPS;				return 0; // we processed (or absorbed) the key
-		//case VK_F6:		m_bShowRating = !m_bShowRating;			return 0; // we processed (or absorbed) the key
+                case VK_F4: m_bShowPresetInfo = !m_bShowPresetInfo;  return 0; // we processed (or absorbed) the key
+		case VK_F5: m_bShowFPS = !m_bShowFPS;                return 0; // we processed (or absorbed) the key
+		case VK_F6: m_bShowRating = !m_bShowRating;	     return 0; // we processed (or absorbed) the key
+
 		//case VK_F7:
 		//	if (m_nNumericInputMode == NUMERIC_INPUT_MODE_CUST_MSG)
 		//		ReadCustomMessages();		// re-read custom messages
@@ -6293,7 +6289,7 @@ int CPlugin::HandleRegularKey(WPARAM wParam)
         }
 
         // erase all history, too:
-        //m_presetHistory[0] = m_szCurrentPresetFile; Removed to compile with VS2019
+        m_presetHistory[0] = m_szCurrentPresetFile;
         m_presetHistoryPos = 0;
         m_presetHistoryFwdFence = 1;
         m_presetHistoryBackFence = 0;
@@ -6868,7 +6864,7 @@ void CPlugin::PrevPreset(float fBlendTime)
         if (m_presetHistoryPos != m_presetHistoryBackFence)
         {
             m_presetHistoryPos = prev;
-            // LoadPreset( m_presetHistory[m_presetHistoryPos].c_str(), fBlendTime); Removed to compile with VS2019 
+            LoadPreset( m_presetHistory[m_presetHistoryPos].c_str(), fBlendTime); 
         }
     }
 }
@@ -6910,7 +6906,7 @@ void CPlugin::LoadRandomPreset(float fBlendTime)
         if (next != m_presetHistoryFwdFence && !bHistoryEmpty)
         {
             m_presetHistoryPos = next;
-            // LoadPreset( m_presetHistory[m_presetHistoryPos].c_str(), fBlendTime); Removed to compile with VS2019 
+            LoadPreset( m_presetHistory[m_presetHistoryPos].c_str(), fBlendTime); 
             return;
         }
     }
@@ -7180,7 +7176,7 @@ void CPlugin::LoadPreset(const wchar_t *szPresetFilename, float fBlendTime)
         if ( m_presetHistoryFwdFence == m_presetHistoryPos )
         {
             // we're at the forward frontier; add to history
-            // m_presetHistory[m_presetHistoryPos] = szPresetFilename; Removed to compile with VS2019
+            m_presetHistory[m_presetHistoryPos] = szPresetFilename;
             m_presetHistoryFwdFence = (m_presetHistoryFwdFence+1) % PRESET_HIST_LEN;
 
             // don't let the two fences touch
