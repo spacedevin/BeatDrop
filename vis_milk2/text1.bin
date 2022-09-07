@@ -1,4 +1,4 @@
- GENERAL:
+ BEATDROP2077:
 
    ESC             exit help / menus
    ALT+ENTER       toggle fullscreen
@@ -15,13 +15,14 @@
    A               do random mini-mash-up
    D               toggle warp & comp shader locks
 
- PLAYBACK:
+ HOTKEYS:
 
-   F1    play/pause      F2    stop
-   F3    prev            F4    next
-   F5    volume up       F6    volume down
-   F7    shuffle         F8    repeat mode
+   F4    Show preset name
+   F5    Show FPS
+   F6    Show preset rating
+   F10   Pause
+
 
  INFO:
 
-   F12   help            F9    title / time / preset
+   F1    help
