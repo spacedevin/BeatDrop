@@ -881,9 +881,9 @@ void CPlugin::OverrideDefaults()
     // m_start_fullscreen      = 0;       // 0 or 1
     // m_start_desktop         = 0;       // 0 or 1
     // m_fake_fullscreen_mode  = 0;       // 0 or 1
-       m_max_fps_fs            = 0;       // 1-120, or 0 for 'unlimited' 
+       m_max_fps_fs            = 60;       // 1-120, or 0 for 'unlimited' 
     // m_max_fps_dm            = 30;      // 1-120, or 0 for 'unlimited'
-       m_max_fps_w             = 0;       // 1-120, or 0 for 'unlimited'
+       m_max_fps_w             = 60;       // 1-120, or 0 for 'unlimited'
        m_show_press_f1_msg     = 0;       // 0 or 1
        m_allow_page_tearing_w  = 0;       // 0 or 1
     // m_allow_page_tearing_fs = 0;       // 0 or 1
@@ -982,7 +982,7 @@ void CPlugin::MyPreInitialize()
     m_nMaxPSVersion_ConfigPanel = 3;  // -1 = auto, 0 = disable shaders, 2 = ps_2_0, 3 = ps_3_0
     m_nMaxPSVersion_DX9 = 3;          // 0 = no shader support, 2 = ps_2_0, 3 = ps_3_0
     m_nMaxPSVersion = 3;              // this one will be the ~min of the other two.  0/2/3.
-    m_nMaxImages = 64;
+    m_nMaxImages = 3000;
     m_nMaxBytes  = 2000000000;
 
     #ifdef _DEBUG
@@ -1205,7 +1205,7 @@ void CPlugin::MyReadConfig()
 	m_nGridX		= 64;
 	m_nGridY        = 64;
     m_nMaxPSVersion_ConfigPanel = GetPrivateProfileIntW(L"settings",L"MaxPSVersion",m_nMaxPSVersion_ConfigPanel,pIni);
-    m_nMaxImages    = 64;
+    m_nMaxImages    = 3000;
     m_nMaxBytes     = 2000000000;
 
 	m_fBlendTimeUser			= GetPrivateProfileFloatW(L"settings",L"fBlendTimeUser"         ,m_fBlendTimeUser         ,pIni);
@@ -5407,9 +5407,34 @@ LRESULT CPlugin::MyWindowProc(HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lP
 
 		switch(wParam)
 		{
+		// BeatDrop2077 : change FPS pressing F2
+		case VK_F2:
+			if (m_max_fps_w == 0) { wsprintfW(m_szSongTitle, L"30 fps"); LaunchSongTitleAnim(); m_max_fps_w = 30; m_max_fps_fs = 30; break; }
+			if (m_max_fps_w == 30) { wsprintfW(m_szSongTitle, L"60 fps"); LaunchSongTitleAnim(); m_max_fps_w = 60; m_max_fps_fs = 60; break; }
+			if (m_max_fps_w == 60) { wsprintfW(m_szSongTitle, L"90 fps"); LaunchSongTitleAnim(); m_max_fps_w = 90; m_max_fps_fs = 90; break; }
+			if (m_max_fps_w == 90) { wsprintfW(m_szSongTitle, L"120 fps"); LaunchSongTitleAnim(); m_max_fps_w = 120; m_max_fps_fs = 120; break; }
+			if (m_max_fps_w == 120) { wsprintfW(m_szSongTitle, L"144 fps"); LaunchSongTitleAnim(); m_max_fps_w = 144; m_max_fps_fs = 144; break; }
+			if (m_max_fps_w == 144) { wsprintfW(m_szSongTitle, L"240 fps"); LaunchSongTitleAnim(); m_max_fps_w = 240; m_max_fps_fs = 240; break; }
+			if (m_max_fps_w == 240) { wsprintfW(m_szSongTitle, L"360 fps"); LaunchSongTitleAnim(); m_max_fps_w = 360; m_max_fps_fs = 360; break; }
+			if (m_max_fps_w == 360) { wsprintfW(m_szSongTitle, L"unlimited fps"); LaunchSongTitleAnim(); m_max_fps_w = 0; m_max_fps_fs = 0; break; }
+			return 0; // we processed (or absorbed) the key
+
+		// BeatDrop2077 : change time between presets pressing F3
+		case VK_F3:
+			if (m_fTimeBetweenPresets == 0.0f) { wsprintfW(m_szSongTitle, L"15 sec"); LaunchSongTitleAnim(); m_bPresetLockedByUser = false; m_fTimeBetweenPresets = 16.0f; m_fTimeBetweenPresetsRand = 5.0f; break; }
+			if (m_fTimeBetweenPresets == 16.0f) { wsprintfW(m_szSongTitle, L"30 sec"); LaunchSongTitleAnim(); m_bPresetLockedByUser = false; m_fTimeBetweenPresets = 30.0f; m_fTimeBetweenPresetsRand = 5.0f; break; }
+			if (m_fTimeBetweenPresets == 30.0f) { wsprintfW(m_szSongTitle, L"60 sec"); LaunchSongTitleAnim(); m_bPresetLockedByUser = false; m_fTimeBetweenPresets = 60.0f; m_fTimeBetweenPresetsRand = 5.0f; break; }
+			if (m_fTimeBetweenPresets == 60.0f) { wsprintfW(m_szSongTitle, L"120 sec"); LaunchSongTitleAnim(); m_bPresetLockedByUser = false; m_fTimeBetweenPresets = 120.0f; m_fTimeBetweenPresetsRand = 5.0f; break; }
+			if (m_fTimeBetweenPresets == 120.0f) { wsprintfW(m_szSongTitle, L"180 sec"); LaunchSongTitleAnim(); m_bPresetLockedByUser = false; m_fTimeBetweenPresets = 180.0f; m_fTimeBetweenPresetsRand = 5.0f; break; }
+			if (m_fTimeBetweenPresets == 180.0f) { wsprintfW(m_szSongTitle, L"unlimited sec"); LaunchSongTitleAnim(); m_fTimeBetweenPresets = 0.0f; m_fTimeBetweenPresetsRand = 0.0f; m_bPresetLockedByUser = true; break; }
+			else { wsprintfW(m_szSongTitle, L"30 sec"); LaunchSongTitleAnim(); m_bPresetLockedByUser = false; m_fTimeBetweenPresets = 30.0f; m_fTimeBetweenPresetsRand = 5.0f; break; }
+			return 0; // we processed (or absorbed) the key	
+				
                 case VK_F4: m_bShowPresetInfo = !m_bShowPresetInfo;  return 0; // we processed (or absorbed) the key
 		case VK_F5: m_bShowFPS = !m_bShowFPS;                return 0; // we processed (or absorbed) the key
 		case VK_F6: m_bShowRating = !m_bShowRating;	     return 0; // we processed (or absorbed) the key
+		
+		// BeatDrop2077 : AlwaysOnTop ON/OFF pressing F7
 		case VK_F7: 
 			m_bAlwaysOnTop = !m_bAlwaysOnTop;
 			if (m_bAlwaysOnTop) {
@@ -5444,9 +5469,9 @@ LRESULT CPlugin::MyWindowProc(HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lP
 		//	}
 		//	return 0; // we processed (or absorbed) the key
 
-  //      case VK_F9:
-  //          m_bShowShaderHelp = !m_bShowShaderHelp;
-  //          return FALSE;
+                case VK_F9:
+                m_bShowShaderHelp = !m_bShowShaderHelp;
+                return FALSE;
 
         case VK_SCROLL:
             m_bPresetLockedByUser = GetKeyState(VK_SCROLL) & 1;
@@ -6905,8 +6930,6 @@ void CPlugin::LoadRandomPreset(float fBlendTime)
 	// make sure file list is ok
 	if (m_nPresets - m_nDirs == 0)
 	{
-		if (m_nPresets - m_nDirs == 0)
-		{
 			// note: this error message is repeated in milkdropfs.cpp in DrawText()
 			wchar_t buf[1024];
             swprintf(buf, wasabiApiLangString(IDS_ERROR_NO_PRESET_FILE_FOUND_IN_X_MILK), m_szPresetDir);
@@ -6921,7 +6944,6 @@ void CPlugin::LoadRandomPreset(float fBlendTime)
             }
 			return;
 		}
-	}
 
     bool bHistoryEmpty = (m_presetHistoryFwdFence==m_presetHistoryBackFence);
 
@@ -7231,16 +7253,16 @@ void CPlugin::LoadPreset(const wchar_t *szPresetFilename, float fBlendTime)
 	    m_pOldState = temp;
 
         DWORD ApplyFlags = STATE_ALL;
-        // ApplyFlags ^= (m_bWarpShaderLock ? STATE_WARP : 0);
-        // ApplyFlags ^= (m_bCompShaderLock ? STATE_COMP : 0);
+        ApplyFlags ^= (m_bWarpShaderLock ? STATE_WARP : 0);
+        ApplyFlags ^= (m_bCompShaderLock ? STATE_COMP : 0);
 
         m_pState->Import(m_szCurrentPresetFile, GetTime(), m_pOldState, ApplyFlags);
 
-	    if (fBlendTime >= 0.001f)
+	/*    if (fBlendTime >= 0.001f)
         {
             RandomizeBlendPattern();
 		    m_pState->StartBlendFrom(m_pOldState, GetTime(), fBlendTime);
-        }
+        }*/
 
 	    m_fPresetStartTime = GetTime();
 	    m_fNextPresetTime = -1.0f;		// flags UpdateTime() to recompute this
@@ -7265,8 +7287,8 @@ void CPlugin::LoadPreset(const wchar_t *szPresetFilename, float fBlendTime)
         ZeroMemory(&m_NewShaders, sizeof(PShaderSet));
 
         DWORD ApplyFlags = STATE_ALL;
-        // ApplyFlags ^= (m_bWarpShaderLock ? STATE_WARP : 0);
-        // ApplyFlags ^= (m_bCompShaderLock ? STATE_COMP : 0);
+        ApplyFlags ^= (m_bWarpShaderLock ? STATE_WARP : 0);
+        ApplyFlags ^= (m_bCompShaderLock ? STATE_COMP : 0);
 
         m_pNewState->Import(szPresetFilename, GetTime(), m_pOldState, ApplyFlags);
 
