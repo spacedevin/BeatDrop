@@ -18,13 +18,11 @@
 
  HOTKEYS:
 
+   F1    help
+   F2    change max FPS
+   F3    change time between preset
    F4    Show preset name
    F5    Show FPS
    F6    Show preset rating
    F7    Always on top
    F10   Pause
-
-
- INFO:
-
-   F1    help
