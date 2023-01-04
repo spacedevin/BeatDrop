@@ -12,6 +12,10 @@
 #include <math.h>
 #include <dwmapi.h>
 
+// SPOUT
+#include <ShellScalingApi.h> // for dpi awareness
+#pragma comment(lib, "shcore.lib") // for dpi awareness
+
 #include "plugin.h"
 #include "resource.h"
 
@@ -27,8 +31,8 @@
 #define DLL_EXPORT __declspec(dllexport)
 //#define COMPILE_AS_DLL
 #define SAMPLE_SIZE 576
-#define DEFAULT_WIDTH 500;
-#define DEFAULT_HEIGHT 500;
+#define DEFAULT_WIDTH 800;
+#define DEFAULT_HEIGHT 800;
 
 CPlugin g_plugin;
 HINSTANCE api_orig_hinstance = nullptr;
@@ -205,6 +209,13 @@ void ToggleFullScreen(HWND hwnd) {
 
 LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch(uMsg) {
+        
+        //BeatDrop2077 DoubleClick = fullscreen on/off
+	    case WM_LBUTTONDBLCLK:
+		ToggleFullScreen(hWnd);
+		break;    
+            
+            
         case WM_CLOSE: {
             DestroyWindow( hWnd );
             UnregisterClassW(L"Direct3DWindowClass", NULL);
@@ -308,6 +319,10 @@ unsigned __stdcall CreateWindowAndRun(void* data) {
     wndClass.lpszMenuName = NULL;
     wndClass.lpszClassName = L"Direct3DWindowClass";
 
+    // SPOUT
+	// Set Per Monitor awareness
+    SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+    
     if (!RegisterClassW(&wndClass)) {
         DWORD dwError = GetLastError();
         if (dwError != ERROR_CLASS_ALREADY_EXISTS) {
@@ -315,20 +330,39 @@ unsigned __stdcall CreateWindowAndRun(void* data) {
         }
     }
 
-    int windowWidth = DEFAULT_WIDTH;
-    int windowHeight = DEFAULT_HEIGHT;
+    // SPOUT
+	// make the window a fixed size to and avoid
+	// resolution change for move instead of size
+    int windowWidth = 800;
+    int windowHeight = 800;
 
     RECT rc;
     SetRect(&rc, 0, 0, windowWidth, windowHeight);
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
+    
+    // SPOUT
+	// Centre on the desktop work area
+	int WindowPosLeft = 0;
+	int WindowPosTop = 0;
+	RECT WorkArea;
+	SystemParametersInfo(SPI_GETWORKAREA, 0, (LPVOID)&WorkArea, 0);
+	WindowPosLeft += ((WorkArea.right - WorkArea.left) - windowWidth) / 2;
+	WindowPosTop += ((WorkArea.bottom - WorkArea.top) - windowHeight) / 2;
+
+	// SPOUT
+	// Remove minimize and maximize
+	DWORD dwStyle = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME);
 
     // Create the render window
     HWND hwnd = CreateWindowW(
         L"Direct3DWindowClass",
         L"BeatDrop2077 - Press Alt+Enter for fullscreen mode",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
+        // WS_OVERLAPPEDWINDOW, // SPOUT
+		dwStyle,
+		WindowPosLeft, // SPOUT
+		WindowPosTop,
+		// CW_USEDEFAULT,
+		// CW_USEDEFAULT,
         (rc.right - rc.left),
         (rc.bottom - rc.top),
         0,
@@ -350,18 +384,26 @@ unsigned __stdcall CreateWindowAndRun(void* data) {
 
     ShowWindow(hwnd, SW_SHOW);
 
-    int lastWidth = windowWidth;
-    int lastHeight = windowHeight;
+   	// SPOUT
+	// Make output resolution independent of the window size
+	// The user can adjust this subsequently by resizing the BeatBox window
+	// int lastWidth = windowWidth;
+	// int lastHeight = windowHeight;
+	int resolutionWidth = 800;
+	int resolutionHeight = 800;
 
     g_plugin.PluginPreInitialize(0, 0);
-    InitD3d(hwnd, windowWidth, windowHeight);
+    // InitD3d(hwnd, windowWidth, windowHeight);
+	InitD3d(hwnd, resolutionWidth, resolutionHeight);
 
     g_plugin.PluginInitialize(
         pD3DDevice,
         &d3dPp,
         hwnd,
-        windowWidth,
-        windowHeight);
+        // windowWidth,
+        // windowHeight);
+		resolutionWidth,
+		resolutionHeight);
 
     MSG msg;
     msg.message = WM_NULL;
