@@ -827,9 +827,9 @@ int CPluginShell::PluginPreInitialize(HWND hWinampWnd, HINSTANCE hWinampInstance
 	m_start_fullscreen      = 0;
 	m_start_desktop         = 0;
 	m_fake_fullscreen_mode  = 0;
-	m_max_fps_fs            = 30;
-	m_max_fps_dm            = 30;
-	m_max_fps_w             = 30;
+	m_max_fps_fs            = 60;
+	m_max_fps_dm            = 60;
+	m_max_fps_w             = 60;
 	m_show_press_f1_msg     = 1;
 	m_allow_page_tearing_w  = 1;
 	m_allow_page_tearing_fs = 0;
@@ -935,7 +935,7 @@ int CPluginShell::PluginPreInitialize(HWND hWinampWnd, HINSTANCE hWinampInstance
 	//m_screenmode: set at end (derived setting)
 	m_frame = 0;
 	m_time = 0;
-	m_fps = 30;
+	m_fps = 60;
 	m_hInstance = hWinampInstance;
 	m_lpDX = NULL;
 	m_szPluginsDirPath[0] = 0;  // will be set further down
@@ -1497,7 +1497,7 @@ void CPluginShell::EnforceMaxFPS()
 
 	if (m_high_perf_timer_freq.QuadPart > 0)
 	{
-		LARGE_INTEGER t;
+		LARGE_INTEGER t = { 0 };
 		QueryPerformanceCounter(&t);
 
 		if (m_prev_end_of_frame.QuadPart != 0)
@@ -1556,7 +1556,7 @@ void CPluginShell::DoTime()
 {
 	if (m_frame==0)
 	{
-		m_fps = 30;
+		m_fps = 60;
 		m_time = 0;
 		m_time_hist_pos = 0;
 	}
