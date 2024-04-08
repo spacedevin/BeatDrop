@@ -1,4 +1,4 @@
-# MilkDrop3
+# MilkDrop3 alpha
 
 - How to download and install : https://youtu.be/OQdZFlOHe5o<br/>
 - All the new features explained : https://youtu.be/QBsDXPENe1I<br/>
